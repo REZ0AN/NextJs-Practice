@@ -4,19 +4,26 @@ import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import moment from "moment";
 
-export default  function ProfilePage() {
+export default function ProfilePage() {
 
     const [user, setUser] = React.useState({
-        id:"",
-        isVerified:false,
-        username:"",
-        email:"",
-        createdAt:""
-
+        id: "",
+        isVerified: false,
+        username: "",
+        email: "",
+        createdAt: ""
     });
-    const [loading, setLoading] = React.useState(false);
 
-    const logoutHandler =  async () => {
+    const [passwordData, setPasswordData] = React.useState({
+        password: "",
+        newPassword: "",
+        confirmPassword: ""
+    });
+
+    const [loading, setLoading] = React.useState(false);
+    const [passwordLoading, setPasswordLoading] = React.useState(false);
+
+    const logoutHandler = async () => {
         try {
             await axios.get('/api/users/logout');
             // Redirect to login page after logout
@@ -26,14 +33,11 @@ export default  function ProfilePage() {
         }
     };
 
-
-
     const getUserData = async () => {
         try {
             setLoading(true);
             const response = await axios.get('/api/users/me');
             setUser({
-                ...user,
                 id: response.data.user._id,
                 isVerified: response.data.user.isVerified,
                 username: response.data.user.username,
@@ -48,9 +52,57 @@ export default  function ProfilePage() {
         }
     };
 
+    const handlePasswordChange = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validation
+        if (!passwordData.password || !passwordData.newPassword || !passwordData.confirmPassword) {
+            toast.error("All password fields are required");
+            return;
+        }
+
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            toast.error("New passwords do not match");
+            return;
+        }
+
+        if (passwordData.newPassword.length < 6) {
+            toast.error("New password must be at least 6 characters long");
+            return;
+        }
+
+        if (passwordData.password === passwordData.newPassword) {
+            toast.error("New password must be different from current password");
+            return;
+        }
+
+        try {
+            setPasswordLoading(true);
+            const response = await axios.put('/api/users/updatepassword', {
+                password: passwordData.password,
+                newPassword: passwordData.newPassword
+            });
+
+            if (response.data.success) {
+                toast.success("Password updated successfully!");
+                // Clear the form
+                setPasswordData({
+                    password: "",
+                    newPassword: "",
+                    confirmPassword: ""
+                });
+            }
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Failed to update password");
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
     useEffect(() => {
         getUserData();
     }, []);
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-100">
             {/* Navbar */}
@@ -77,120 +129,159 @@ export default  function ProfilePage() {
             {
                 loading ? (
                     <div className="flex items-center justify-center h-[80vh]">
-                        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+                        <div className="animate-spin rounded-full border-8 border-t-8 border-teal-600 h-16 w-16"></div>
                     </div>
-                ) : (            <div className="max-w-7xl mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Left Side - User Information */}
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">User Information</h2>
-                        
-                        <div className="space-y-6">
-                            {/* Username */}
-                            <div className="border-b border-gray-200 pb-4">
-                                <label className="block text-sm font-medium text-gray-500 mb-1">
-                                    Username
-                                </label>
-                                <p className="text-lg text-gray-900 font-medium">{user?.username}</p>
+                ) : (
+                    <div className="max-w-7xl mx-auto px-4 py-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Left Side - User Information */}
+                            <div className="bg-white rounded-2xl shadow-xl p-8">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">User Information</h2>
+
+                                <div className="space-y-6">
+                                    {/* Username */}
+                                    <div className="border-b border-gray-200 pb-4">
+                                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                                            Username
+                                        </label>
+                                        <p className="text-lg text-gray-900 font-medium">{user?.username}</p>
+                                    </div>
+
+                                    {/* Email */}
+                                    <div className="border-b border-gray-200 pb-4">
+                                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                                            Email
+                                        </label>
+                                        <p className="text-lg text-gray-900 font-medium">{user?.email}</p>
+                                    </div>
+
+                                    {/* Created At */}
+                                    <div className="border-b border-gray-200 pb-4">
+                                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                                            Member Since
+                                        </label>
+                                        <p className="text-lg text-gray-900 font-medium">
+                                            {user?.createdAt ? moment(user?.createdAt).format("MMMM Do YYYY") : ""}
+                                        </p>
+                                    </div>
+
+                                    {/* User ID (optional) */}
+                                    <div className="border-b border-gray-200 pb-4">
+                                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                                            User ID
+                                        </label>
+                                        <p className="text-lg text-gray-900 font-medium font-mono break-all">{user?.id}</p>
+                                    </div>
+
+                                    {/* Verification Status */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                                            Verification Status
+                                        </label>
+                                        <div className="flex items-center">
+                                            {user?.isVerified ? (
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                    </svg>
+                                                    Verified
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    Not Verified
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Email */}
-                            <div className="border-b border-gray-200 pb-4">
-                                <label className="block text-sm font-medium text-gray-500 mb-1">
-                                    Email
-                                </label>
-                                <p className="text-lg text-gray-900 font-medium">{user?.email}</p>
-                            </div>
+                            {/* Right Side - Change Password */}
+                            <div className="bg-white rounded-2xl shadow-xl p-8">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Change Password</h2>
 
-                            {/* Created At */}
-                            <div className="border-b border-gray-200 pb-4">
-                                <label className="block text-sm font-medium text-gray-500 mb-1">
-                                    Member Since
-                                </label>
-                                <p className="text-lg text-gray-900 font-medium">{user?.createdAt? moment(user?.createdAt).format("MMMM Do YYYY"): "" }</p>
-                            </div>
+                                <form className="space-y-6" onSubmit={handlePasswordChange}>
+                                    {/* Current Password */}
+                                    <div>
+                                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                            Current Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="currentPassword"
+                                            name="currentPassword"
+                                            value={passwordData.password}
+                                            onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                                            className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                                            placeholder="Enter current password"
+                                        />
+                                    </div>
 
-                            {/* User ID (optional) */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500 mb-1">
-                                    User ID
-                                </label>
-                                <p className="text-lg text-gray-900 font-medium font-mono">{user?.id}</p>
+                                    {/* New Password */}
+                                    <div>
+                                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                            New Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="newPassword"
+                                            name="newPassword"
+                                            value={passwordData.newPassword}
+                                            onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                            className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                                            placeholder="Enter new password"
+                                        />
+                                    </div>
+
+                                    {/* Confirm New Password */}
+                                    <div>
+                                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                            Confirm New Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            value={passwordData.confirmPassword}
+                                            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                            className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                                            placeholder="Confirm new password"
+                                        />
+                                    </div>
+
+                                    {/* Password Requirements */}
+                                    <div className="bg-gray-50 rounded-lg p-4">
+                                        <p className="text-sm font-medium text-gray-700 mb-2">Password Requirements:</p>
+                                        <ul className="text-sm text-gray-600 space-y-1">
+                                            <li className={passwordData.newPassword.length >= 6 ? "text-green-600" : ""}>
+                                                • At least 6 characters long
+                                            </li>
+                                            <li className={passwordData.newPassword !== passwordData.password && passwordData.newPassword.length > 0 ? "text-green-600" : ""}>
+                                                • Different from current password
+                                            </li>
+                                            <li className={passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length > 0 ? "text-green-600" : ""}>
+                                                • Passwords match
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <button
+                                        type="submit"
+                                        disabled={passwordLoading}
+                                        className={`w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:ring-4 focus:ring-teal-200 transition ${passwordLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        {passwordLoading ? "Updating..." : "Update Password"}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-
-                    {/* Right Side - Change Password */}
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Change Password</h2>
-                        
-                        <form className="space-y-6">
-                            {/* Current Password */}
-                            <div>
-                                <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Current Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="currentPassword"
-                                    name="currentPassword"
-                                    className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                                    placeholder="Enter current password"
-                                />
-                            </div>
-
-                            {/* New Password */}
-                            <div>
-                                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    New Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="newPassword"
-                                    name="newPassword"
-                                    className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                                    placeholder="Enter new password"
-                                />
-                            </div>
-
-                            {/* Confirm New Password */}
-                            <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Confirm New Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                                    placeholder="Confirm new password"
-                                />
-                            </div>
-
-                            {/* Password Requirements */}
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <p className="text-sm font-medium text-gray-700 mb-2">Password Requirements:</p>
-                                <ul className="text-sm text-gray-600 space-y-1">
-                                    <li>• At least 8 characters long</li>
-                                    <li>• Contains uppercase and lowercase letters</li>
-                                    <li>• Contains at least one number</li>
-                                    <li>• Contains at least one special character</li>
-                                </ul>
-                            </div>
-
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:ring-4 focus:ring-teal-200 transition"
-                            >
-                                Update Password
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>)
+                )
             }
         </div>
     );
 }
-    

@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'react-hot-toast/headless';
-
+import Link from "next/link";
 
 export default function LoginPage() {
     const [user, setUser] = React.useState({
@@ -22,6 +22,7 @@ export default function LoginPage() {
             setLoading(true);
             const response = await axios.post('/api/users/login', user);
             const data = response.data;
+            
             if (data.success) {
                 toast.success("Login successful! Redirecting...");
                 router.push('/profile');
@@ -29,12 +30,21 @@ export default function LoginPage() {
                 setError(data.message);
                 toast.error(data.message);
             }
-    } catch (error : any) {
-        setError("An error occurred during login."+ (error.message || error));
-        toast.error(error.message || error);
-    } finally {
-        setLoading(false);
-    }}
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message || "An error occurred during login.";
+            
+            // Check if error is due to unverified email
+            if (error.response?.status === 403 || errorMessage.includes("verify your email")) {
+                toast.error("Please verify your email first");
+                router.push('/pending-verification');
+            } else {
+                setError(errorMessage);
+                toast.error(errorMessage);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
         if (user.username.length > 0 && user.password.length > 0) {
@@ -87,7 +97,17 @@ export default function LoginPage() {
                             placeholder="••••••••"
                         />
                     </div>
-
+                    {/* Add this after the password field in your login form */}
+                    <div className="flex items-center justify-between">
+                        <div className="text-sm">
+                            <Link 
+                                href="/forgotpassword" 
+                                className="text-indigo-600 hover:text-indigo-700 font-medium"
+                            >
+                                Forgot password?
+                            </Link>
+                        </div>
+                    </div>
                     {/* Submit Button */}
                     <button
                         type="submit"
