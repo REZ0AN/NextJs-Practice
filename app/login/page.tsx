@@ -24,7 +24,7 @@ export default function LoginPage() {
             const data = response.data;
             if (data.success) {
                 toast.success("Login successful! Redirecting...");
-                router.push('/profile/' + user.username);
+                router.push('/profile');
             } else {
                 setError(data.message);
                 toast.error(data.message);
