@@ -13,7 +13,7 @@ export const createVerificationToken = async (email : string) => {
             { verifyToken: hashedToken, verifyTokenExpiry: Date.now() + 120000 }, // 1 hour expiry
             { new: true }
         );
-        return hashedToken;
+        return {token:hashedToken, expiresAt: user.verifyTokenExpiry.getTime()};
 
     } catch (error: any) {
         throw new Error(error.message);
@@ -25,13 +25,16 @@ export const createPasswordResetToken = async (email: string) => {
     try {
         const hashedToken = await bcrypt.hash(email + Date.now().toString(), 10);
         
-        await User.findOneAndUpdate(
+        const user =  await User.findOneAndUpdate(
             { email },
             { forgetPasswordToken: hashedToken, forgetPasswordTokenExpiry: Date.now() + 120000 },
             { new: true }
         );
         
-        return hashedToken;
+        return {
+            token:hashedToken,
+            expiresAt: user.forgetPasswordTokenExpiry.getTime()
+        };
     } catch (error: any) {
         throw new Error(error.message);
     }

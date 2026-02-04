@@ -9,12 +9,19 @@ import Link from "next/link";
 export default function PendingVerificationPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
-     const currentToken = searchParams.get("token");
-    // --- Constants ---
-    const WAIT_TIME_SECONDS = 120; // 2 minutes validity window
+    
+    // 1. Parse Token and Expiry Timestamp from URL
+    const currentToken = searchParams.get("token");
+    const expiresAtParam = searchParams.get("expiresAt"); 
+
+    // 2. Calculate initial time left
+    // Default to 120 seconds if no expiresAt is provided (fallback)
+    const initialTimeLeft = expiresAtParam 
+        ? Math.ceil((parseInt(expiresAtParam) - Date.now()) / 1000) 
+        : 120;
 
     // --- State ---
-    const [timeLeft, setTimeLeft] = useState(WAIT_TIME_SECONDS);
+    const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
     const [loading, setLoading] = useState(false);
     const [verified, setVerified] = useState(false);
     const [error, setError] = useState(false);
@@ -25,8 +32,14 @@ export default function PendingVerificationPage() {
         setVerified(false);
         setError(false);
         setLoading(false);
-        setTimeLeft(WAIT_TIME_SECONDS);
-    }, [searchParams]);
+        
+        // Recalculate timeLeft whenever the URL search params change
+        const newTimeLeft = expiresAtParam 
+            ? Math.ceil((parseInt(expiresAtParam) - Date.now()) / 1000) 
+            : 120;
+        
+        setTimeLeft(Math.max(0, newTimeLeft)); // Ensure we don't show negative time
+    }, [searchParams, expiresAtParam]);
 
     // --- Logic: Verification Call ---
     const verifyUserEmail = async (tokenToVerify: string | null) => {
@@ -66,23 +79,21 @@ export default function PendingVerificationPage() {
         } 
         // SCENARIO B: User is waiting for email (No token)
         else {
-            // Start 120 second countdown
-            if (timeLeft > 0) {
-                const timerId = setInterval(() => {
-                    setTimeLeft((prev) => {
-                        if (prev <= 1) {
-                            clearInterval(timerId);
-                            return 0;
-                        }
-                        return prev - 1;
-                    });
-                }, 1000);
+            // Start countdown timer logic only if we have time remaining
+            const timerId = setInterval(() => {
+                setTimeLeft((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(timerId);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
 
-                // Cleanup interval on unmount
-                return () => clearInterval(timerId);
-            }
+            // Cleanup interval on unmount or dependency change
+            return () => clearInterval(timerId);
         }
-    }, [searchParams]); // Re-run if URL changes (user clicks link)
+    }, [currentToken]); // Re-run if token appears in URL
 
     // Helper to format time (MM:SS)
     const formatTime = (seconds: number) => {

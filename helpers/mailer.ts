@@ -4,9 +4,10 @@ interface EmailParams {
     email: string;
     emailType: "VERIFY" | "RESET";
     token: string;
+    expiresAt : number;
 }
 
-export const sendEmail = async ({ email, emailType, token }: EmailParams) => {
+export const sendEmail = async ({ email, emailType, token, expiresAt }: EmailParams) => {
     try {
         const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -27,26 +28,26 @@ export const sendEmail = async ({ email, emailType, token }: EmailParams) => {
                     <div style="font-family: Arial, sans-serif; padding: 20px;">
                         <h2>Email Verification</h2>
                         <p>Click the link below to verify your email:</p>
-                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token}" 
+                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token}&expiresAt=${expiresAt}" 
                            style="background-color: #4F46E5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
                             Verify Email
                         </a>
                         <p>Or copy and paste this link in your browser:</p>
-                        <a href=${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token} target="_blank">${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token}</a>
-                        <p>This link will expire in 1 hour.</p>
+                        <a href=${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token}&expiresAt=${expiresAt} target="_blank">${process.env.NEXT_PUBLIC_BASE_URL}/pending-verification?token=${token}&expiresAt=${expiresAt}</a>
+                        <p>This link will expire in 2 minutes.</p>
                     </div>
                 `
                 : `
                     <div style="font-family: Arial, sans-serif; padding: 20px;">
                         <h2>Reset Your Password</h2>
                         <p>Click the link below to reset your password:</p>
-                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/resetpassword?token=${token}" 
+                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/resetpassword?token=${token}&expiresAt=${expiresAt}" 
                            style="background-color: #4F46E5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
                             Reset Password
                         </a>
                         <p>Or copy and paste this link in your browser:</p>
-                        <p>${process.env.NEXT_PUBLIC_BASE_URL}/resetpassword?token=${token}</p>
-                        <p>This link will expire in 1 hour.</p>
+                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/resetpassword?token=${token}&expiresAt=${expiresAt}" target="_blank">${process.env.NEXT_PUBLIC_BASE_URL}/resetpassword?token=${token}&expiresAt=${expiresAt}</p>
+                        <p>This link will expire in 2 minutes.</p>
                     </div>
                 `,
         };

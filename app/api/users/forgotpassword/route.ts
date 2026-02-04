@@ -20,18 +20,20 @@ export async function POST(request: NextRequest) {
         }
 
         // Create reset token
-        const resetToken = await createPasswordResetToken(user.email);
+        const {token, expiresAt} = await createPasswordResetToken(user.email);
 
         // Send email
         await sendEmail({
             email,
             emailType: "RESET",
-            token: resetToken,
+            token,
+            expiresAt
         });
 
         return NextResponse.json({
             message: "Password reset email sent",
             success: true,
+            expiresAt,
         });
 
     } catch (error: any) {

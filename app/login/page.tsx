@@ -36,7 +36,7 @@ export default function LoginPage() {
             // Check if error is due to unverified email
             if (error.response?.status === 403 || errorMessage.includes("verify your email")) {
                 toast.error("Please verify your email first");
-                router.push('/pending-verification');
+                router.push(`/pending-verification?expiresAt=${error.response?.expiresAt}`);
             } else {
                 setError(errorMessage);
                 toast.error(errorMessage);

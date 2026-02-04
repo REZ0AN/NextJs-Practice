@@ -25,7 +25,7 @@ export default function RegisterPage() {
             const data = response.data;
             if (data.success) {
                 toast.success("Registration successful! Redirecting to login...");
-                router.push('/pending-verification');
+                router.push(`/pending-verification?expiresAt=${data.expiresAt}`);
             } else {
                 setError(data.message);
                 toast.error(error);

@@ -50,17 +50,18 @@ export async function POST(request: NextRequest) {
         // Check if user is verified (optional - uncomment if you want email verification)
         if (!existingUser.isVerified) {
             // Create verification token
-            const verificationToken = await createVerificationToken(existingUser.email.toString());
+            const {token, expiresAt} = await createVerificationToken(existingUser.email.toString());
     
             // Send verification email
             await sendEmail({
                 email: existingUser.email,
                 emailType: "VERIFY",
-                token: verificationToken
+                token,
+                expiresAt
             });
             
             return NextResponse.json(
-                { message: "Please verify your email before logging in" },
+                { message: "Please verify your email before logging in", expiresAt },
                 { status: 403 }
             );
         }

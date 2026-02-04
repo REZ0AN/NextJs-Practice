@@ -90,18 +90,20 @@ export async function POST(request: NextRequest) {
         const savedUser = await newUser.save();
 
         // Create verification token
-        const verificationToken = await createVerificationToken(savedUser.email.toString());
+        const {token, expiresAt} = await createVerificationToken(savedUser.email.toString());
 
         // Send verification email
         await sendEmail({
             email: savedUser.email,
             emailType: "VERIFY",
-            token: verificationToken
+            token,
+            expiresAt
         });
 
         return NextResponse.json({
             message: "Registration successful! Please check your email to verify your account.",
             success: true,
+            expiresAt,
             user: {
                 id: savedUser._id,
                 username: savedUser.username,
