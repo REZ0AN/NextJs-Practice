@@ -71,11 +71,11 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+        <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-8 max-w-md w-full">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Forgot Password</h1>
-                    <p className="text-gray-600">
+                    <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">Forgot Password</h1>
+                    <p className="text-zinc-600 dark:text-zinc-400">
                         {emailSent ? "Check your email" : "Enter your email to reset password"}
                     </p>
                 </div>
@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
                 {!emailSent ? (
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                className="w-full px-4 py-3 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-lg border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                                 placeholder="john@example.com"
                                 required
                             />
@@ -100,14 +100,14 @@ export default function ForgotPasswordPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {loading ? "Sending..." : "Send Reset Link"}
                         </button>
 
-                        <p className="text-center text-sm text-gray-600">
+                        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
                             Remember your password?{" "}
-                            <Link href="/login" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                            <Link href="/login" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
                                 Login
                             </Link>
                         </p>
@@ -115,16 +115,16 @@ export default function ForgotPasswordPage() {
                 ) : (
                     <div className="text-center py-4">
                         {/* Success Icon */}
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-16 h-16 bg-green-100 dark:bg-green-950 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
                         </div>
                         
-                        <h2 className="text-xl font-semibold text-gray-900 mb-2">Email Sent!</h2>
+                        <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">Email Sent!</h2>
                         
-                        <p className="text-gray-600 mb-6">
-                            We&aposve sent a password reset link to <strong>{email}</strong>. 
+                        <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+                            We&apos;ve sent a password reset link to <strong>{email}</strong>. 
                             <br />
                             {timeLeft !== null 
                                 ? "The link will expire shortly." 
@@ -134,14 +134,14 @@ export default function ForgotPasswordPage() {
                         {/* NEW: Countdown UI */}
                         {timeLeft !== null && (
                             <div className="mb-6 flex justify-center">
-                                <div className={`inline-flex items-center px-4 py-2 rounded-full border ${timeLeft === 0 ? 'bg-red-50 border-red-200' : 'bg-indigo-50 border-indigo-100'}`}>
-                                    <svg className={`w-4 h-4 mr-2 ${timeLeft === 0 ? 'text-red-500' : 'text-indigo-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className={`inline-flex items-center px-4 py-2 rounded-full border ${timeLeft === 0 ? 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800' : 'bg-indigo-50 dark:bg-indigo-950 border-indigo-100 dark:border-indigo-800'}`}>
+                                    <svg className={`w-4 h-4 mr-2 ${timeLeft === 0 ? 'text-red-500 dark:text-red-400' : 'text-indigo-600 dark:text-indigo-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span className={`font-mono font-bold ${timeLeft === 0 ? 'text-red-600' : 'text-indigo-700'}`}>
+                                    <span className={`font-mono font-bold ${timeLeft === 0 ? 'text-red-600 dark:text-red-400' : 'text-indigo-700 dark:text-indigo-300'}`}>
                                         {formatTime(timeLeft)}
                                     </span>
-                                    <span className={`ml-2 text-xs font-medium uppercase ${timeLeft === 0 ? 'text-red-500' : 'text-indigo-500'}`}>
+                                    <span className={`ml-2 text-xs font-medium uppercase ${timeLeft === 0 ? 'text-red-500 dark:text-red-400' : 'text-indigo-500 dark:text-indigo-400'}`}>
                                         {timeLeft === 0 ? 'Expired' : 'Left'}
                                     </span>
                                 </div>

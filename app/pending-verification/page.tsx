@@ -103,13 +103,13 @@ export default function PendingVerificationPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 px-4">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-md w-full text-center border border-slate-100">
+        <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4">
+            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden max-w-md w-full text-center border border-zinc-200 dark:border-zinc-800">
                 
                 {/* Header */}
-                <div className="bg-indigo-600 px-8 py-6">
+                <div className="bg-indigo-600 dark:bg-indigo-700 px-8 py-6">
                     <h1 className="text-2xl font-bold text-white">Email Verification</h1>
-                    <p className="text-indigo-100 text-sm mt-1">
+                    <p className="text-indigo-100 dark:text-indigo-200 text-sm mt-1">
                         {currentToken ? "Verifying..." : "Account Pending"}
                     </p>
                 </div>
@@ -119,26 +119,26 @@ export default function PendingVerificationPage() {
                     {/* 1. LOADING STATE (Token found, verifying...) */}
                     {loading && (
                         <div className="py-8">
-                            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto"></div>
-                            <h2 className="text-lg font-semibold text-slate-800 mt-6">Verifying your email</h2>
-                            <p className="text-slate-500 text-sm mt-2">Please wait while we confirm your request.</p>
+                            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 dark:border-indigo-500 mx-auto"></div>
+                            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mt-6">Verifying your email</h2>
+                            <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2">Please wait while we confirm your request.</p>
                         </div>
                     )}
 
                     {/* 2. SUCCESS STATE */}
                     {verified && (
                         <div className="py-6 animate-fade-in">
-                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-20 h-20 bg-green-100 dark:bg-green-950 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-slate-800 mb-2">Verified!</h2>
-                            <p className="text-slate-600 mb-8">Your email has been verified successfully. Redirecting to login...</p>
+                            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">Verified!</h2>
+                            <p className="text-zinc-600 dark:text-zinc-400 mb-8">Your email has been verified successfully. Redirecting to login...</p>
                             
                             <Link 
                                 href="/login"
-                                className="inline-block w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+                                className="inline-block w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 dark:shadow-none"
                             >
                                 Go to Login
                             </Link>
@@ -148,18 +148,18 @@ export default function PendingVerificationPage() {
                     {/* 3. ERROR STATE (Token invalid/expired) */}
                     {error && (
                         <div className="py-6">
-                            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-20 h-20 bg-red-50 dark:bg-red-950 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-10 h-10 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-slate-800 mb-2">Link Invalid or Expired</h2>
-                            <p className="text-slate-500 mb-8">
+                            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">Link Invalid or Expired</h2>
+                            <p className="text-zinc-500 dark:text-zinc-400 mb-8">
                                 The verification link you used is not valid or has expired.
                             </p>
                             <Link 
                                 href="/login"
-                                className="inline-block w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-slate-900 transition"
+                                className="inline-block w-full bg-zinc-800 dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-medium hover:bg-zinc-900 dark:hover:bg-zinc-200 transition"
                             >
                                 Back to Login
                             </Link>
@@ -172,19 +172,19 @@ export default function PendingVerificationPage() {
                             
                             {/* Large Countdown Timer */}
                             <div className="relative flex justify-center items-center py-4">
-                                <div className="w-40 h-40 rounded-full border-4 border-indigo-100 flex items-center justify-center relative">
+                                <div className="w-40 h-40 rounded-full border-4 border-indigo-100 dark:border-indigo-900 flex items-center justify-center relative">
                                     <div className="text-center">
-                                        <div className="text-4xl font-mono font-bold text-indigo-700">
+                                        <div className="text-4xl font-mono font-bold text-indigo-700 dark:text-indigo-400">
                                             {formatTime(timeLeft)}
                                         </div>
-                                        <div className="text-xs text-indigo-400 uppercase tracking-wider font-semibold mt-1">Remaining</div>
+                                        <div className="text-xs text-indigo-400 dark:text-indigo-500 uppercase tracking-wider font-semibold mt-1">Remaining</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <h2 className="text-xl font-semibold text-slate-800">Check your email</h2>
-                                <p className="text-slate-500 text-sm px-4">
+                                <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-100">Check your email</h2>
+                                <p className="text-zinc-500 dark:text-zinc-400 text-sm px-4">
                                     We have sent a verification link to your registered email address. 
                                     <br/><br/>
                                     The link is valid for <strong>2 minutes</strong>. Please click it to activate your account.
@@ -192,7 +192,7 @@ export default function PendingVerificationPage() {
                             </div>
 
                             {timeLeft === 0 && (
-                                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg text-sm">
+                                <div className="bg-yellow-50 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 p-4 rounded-lg text-sm">
                                     Time expired. The token is no longer valid.
                                 </div>
                             )}

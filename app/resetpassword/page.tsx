@@ -91,10 +91,10 @@ export default function ResetPasswordPage() {
     // --- Render: Invalid Token State ---
     if (!token) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-                    <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid Link</h1>
-                    <p className="text-gray-600 mb-6">This password reset link is invalid.</p>
+            <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4">
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+                    <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Invalid Link</h1>
+                    <p className="text-zinc-600 dark:text-zinc-400 mb-6">This password reset link is invalid.</p>
                     <Link 
                         href="/forgotpassword"
                         className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition"
@@ -108,29 +108,29 @@ export default function ResetPasswordPage() {
 
     // --- Render: Main Page ---
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+        <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-8 max-w-md w-full">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h1>
-                    <p className="text-gray-600">Enter your new password</p>
+                    <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">Reset Password</h1>
+                    <p className="text-zinc-600 dark:text-zinc-400">Enter your new password</p>
                 </div>
 
                 {/* NEW: Countdown Timer Display */}
                 {initialTimeLeft > 0 && (
                     <div className="mb-6">
-                        <div className={`flex items-center justify-center p-3 rounded-lg border ${timeLeft === 0 ? 'bg-red-50 border-red-200' : 'bg-indigo-50 border-indigo-100'}`}>
-                            <svg className={`w-5 h-5 mr-2 ${timeLeft === 0 ? 'text-red-500' : 'text-indigo-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className={`flex items-center justify-center p-3 rounded-lg border ${timeLeft === 0 ? 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800' : 'bg-indigo-50 dark:bg-indigo-950 border-indigo-100 dark:border-indigo-800'}`}>
+                            <svg className={`w-5 h-5 mr-2 ${timeLeft === 0 ? 'text-red-500 dark:text-red-400' : 'text-indigo-600 dark:text-indigo-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span className={`font-mono font-bold text-lg ${timeLeft === 0 ? 'text-red-600' : 'text-indigo-700'}`}>
+                            <span className={`font-mono font-bold text-lg ${timeLeft === 0 ? 'text-red-600 dark:text-red-400' : 'text-indigo-700 dark:text-indigo-300'}`}>
                                 {formatTime(timeLeft)}
                             </span>
-                            <span className={`ml-2 text-sm font-medium ${timeLeft === 0 ? 'text-red-500' : 'text-indigo-500'}`}>
+                            <span className={`ml-2 text-sm font-medium ${timeLeft === 0 ? 'text-red-500 dark:text-red-400' : 'text-indigo-500 dark:text-indigo-400'}`}>
                                 {timeLeft === 0 ? 'Link Expired' : 'remaining'}
                             </span>
                         </div>
                         {timeLeft === 0 && (
-                            <p className="text-xs text-red-500 mt-2 text-center">The reset link has expired. Please request a new one.</p>
+                            <p className="text-xs text-red-500 dark:text-red-400 mt-2 text-center">The reset link has expired. Please request a new one.</p>
                         )}
                     </div>
                 )}
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
                 {!resetSuccess ? (
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                                 New Password
                             </label>
                             <input
@@ -146,14 +146,14 @@ export default function ResetPasswordPage() {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                className="w-full px-4 py-3 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-lg border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                                 placeholder="Enter new password"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                                 Confirm Password
                             </label>
                             <input
@@ -161,15 +161,15 @@ export default function ResetPasswordPage() {
                                 id="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                className="w-full px-4 py-3 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-lg border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                                 placeholder="Confirm new password"
                                 required
                             />
                         </div>
 
-                        <div className="bg-gray-50 rounded-lg p-4">
-                            <p className="text-sm font-medium text-gray-700 mb-2">Password Requirements:</p>
-                            <ul className="text-sm text-gray-600 space-y-1">
+                        <div className="bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+                            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Password Requirements:</p>
+                            <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
                                 <li>• At least 6 characters long</li>
                                 <li>• Contains uppercase and lowercase letters</li>
                                 <li>• Contains at least one number</li>
@@ -179,21 +179,21 @@ export default function ResetPasswordPage() {
                         <button
                             type="submit"
                             disabled={loading || timeLeft === 0} // Disable if expired
-                            className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition ${loading || timeLeft === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition ${loading || timeLeft === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {loading ? "Resetting..." : "Reset Password"}
                         </button>
                     </form>
                 ) : (
                     <div className="text-center py-4">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-16 h-16 bg-green-100 dark:bg-green-950 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
-                        <h2 className="text-2xl font-semibold text-green-600 mb-2">Success!</h2>
-                        <p className="text-gray-600 mb-6">Your password has been reset successfully.</p>
-                        <p className="text-sm text-gray-500">Redirecting to login...</p>
+                        <h2 className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-2">Success!</h2>
+                        <p className="text-zinc-600 dark:text-zinc-400 mb-6">Your password has been reset successfully.</p>
+                        <p className="text-sm text-zinc-500 dark:text-zinc-500">Redirecting to login...</p>
                     </div>
                 )}
             </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import {Toaster} from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,6 +12,35 @@ export default function RootLayout({ children, }: Readonly <{ children: React.Re
     <html lang="en">
       <body className="antialiased" >
         {children}
+      <Toaster 
+        position="top-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          // Default options for all toasts
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          // Success toast style
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          // Error toast style
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
       </body>
     </html>
   );

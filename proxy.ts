@@ -1,19 +1,23 @@
 import { NextResponse, NextRequest } from 'next/server'
  
-// This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {
    const path = request.nextUrl.pathname;
-   const isPublicPath =  path === '/login' || path === '/register' || path.startsWith('/pending-verification');
+   const isPublicPath = path === '/login' || path === '/register' || path.startsWith('/pending-verification') || path === '/';
    const token = request.cookies.get("token")?.value;
-   if (isPublicPath && token) {
+   
+   // Redirect logged-in users away from login/register pages (but allow home page)
+   if ((path === '/login' || path === '/register') && token) {
         return NextResponse.redirect(new URL('/profile', request.nextUrl));
-    }
+   }
 
+   // Protect non-public routes - redirect to login if not authenticated
    if (!isPublicPath && !token) {
       return NextResponse.redirect(new URL('/login', request.nextUrl));
-    }
-    return NextResponse.next();
+   }
+   
+   return NextResponse.next();
 }
+
 export const config = {
   matcher: [
     '/profile/:path*',
@@ -22,6 +26,6 @@ export const config = {
     '/register',
     '/pending-verification',
     '/pending-verification/:path*',
-    '/'
-],
+    '/',
+  ],
 }

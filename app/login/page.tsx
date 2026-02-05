@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react';
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
-import { toast } from 'react-hot-toast/headless';
+import { toast } from 'react-hot-toast';
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -25,7 +25,7 @@ export default function LoginPage() {
             
             if (data.success) {
                 toast.success("Login successful! Redirecting...");
-                router.push('/profile');
+                router.push('/');
             } else {
                 setError(data.message);
                 toast.error(data.message);
@@ -36,7 +36,7 @@ export default function LoginPage() {
             // Check if error is due to unverified email
             if (error.response?.status === 403 || errorMessage.includes("verify your email")) {
                 toast.error("Please verify your email first");
-                router.push(`/pending-verification?expiresAt=${error.response?.expiresAt}`);
+                router.push(`/pending-verification?expiresAt=${error.response?.data.expiresAt}`);
             } else {
                 setError(errorMessage);
                 toast.error(errorMessage);
@@ -55,20 +55,20 @@ export default function LoginPage() {
     }, [user]);
 
     return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black px-4 py-12">
         <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-                    <p className="text-gray-600">{loading ? "Logging in..." : error}</p>
+                    <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">Welcome Back</h1>
+                    <p className="text-zinc-600 dark:text-zinc-400">{loading ? "Logging in..." : error}</p>
                 </div>
 
                 {/* Form */}
                 <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); onLogin(); }}>
                     {/* Username Field */}
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="username" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                             Username
                         </label>
                         <input
@@ -77,14 +77,14 @@ export default function LoginPage() {
                             name="username"
                             value={user.username}
                             onChange={(e) => setUser({...user, username: e.target.value})}
-                            className="w-full px-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                            className="w-full px-4 py-3 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-lg border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                             placeholder="johndoe"
                         />
                     </div>
 
                     {/* Password Field */}
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                             Password
                         </label>
                         <input
@@ -93,7 +93,7 @@ export default function LoginPage() {
                             name="password"
                             value={user.password}
                             onChange={(e) => setUser({...user, password: e.target.value})}
-                            className="w-full px-4 py-3 rounded-lg text-black border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                            className="w-full px-4 py-3 rounded-lg text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                             placeholder="••••••••"
                         />
                     </div>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                         <div className="text-sm">
                             <Link 
                                 href="/forgotpassword" 
-                                className="text-indigo-600 hover:text-indigo-700 font-medium"
+                                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium"
                             >
                                 Forgot password?
                             </Link>
@@ -111,7 +111,7 @@ export default function LoginPage() {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition ${buttonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition ${buttonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={buttonDisabled}
                     >
                         Login
@@ -119,11 +119,11 @@ export default function LoginPage() {
                 </form>
 
                 {/* Footer */}
-                <p className="text-center text-sm text-gray-600 mt-6">
-                    Don&apost have an account?{' '}
-                    <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                <p className="text-center text-sm text-zinc-600 dark:text-zinc-400 mt-6">
+                    Don&apos;t have an account?{' '}
+                    <Link href="/register" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
                         Register
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>
