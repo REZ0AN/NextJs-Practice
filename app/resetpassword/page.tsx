@@ -1,11 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+// --- Internal Component Handling Search Params ---
+function ResetPasswordContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     
@@ -115,7 +117,7 @@ export default function ResetPasswordPage() {
                     <p className="text-zinc-600 dark:text-zinc-400">Enter your new password</p>
                 </div>
 
-                {/* NEW: Countdown Timer Display */}
+                {/* Countdown Timer Display */}
                 {initialTimeLeft > 0 && (
                     <div className="mb-6">
                         <div className={`flex items-center justify-center p-3 rounded-lg border ${timeLeft === 0 ? 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800' : 'bg-indigo-50 dark:bg-indigo-950 border-indigo-100 dark:border-indigo-800'}`}>
@@ -178,7 +180,7 @@ export default function ResetPasswordPage() {
 
                         <button
                             type="submit"
-                            disabled={loading || timeLeft === 0} // Disable if expired
+                            disabled={loading || timeLeft === 0}
                             className={`w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-900 transition ${loading || timeLeft === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {loading ? "Resetting..." : "Reset Password"}
@@ -198,5 +200,14 @@ export default function ResetPasswordPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+// --- Default Export with Suspense ---
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <ResetPasswordContent />
+        </Suspense>
     );
 }
