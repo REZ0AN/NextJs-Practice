@@ -2,11 +2,12 @@ import { NextResponse, NextRequest } from 'next/server'
  
 export function proxy(request: NextRequest) {
    const path = request.nextUrl.pathname;
-   const isPublicPath = path === '/login' || path === '/register' || path.startsWith('/pending-verification') || path === '/';
+   const isPublicPath = path === '/login' || path === '/register' || path.startsWith('/pending-verification') || path === '/' || path.startsWith('/resetpassword') || path.startsWith('/forgotpassword');
+   const isAccessibleByLoggedInUser = (path === '/login' || path === '/register' || path.startsWith('/pending-verification') || path.startsWith('/resetpassword') || path.startsWith('/forgotpassword'));
    const token = request.cookies.get("token")?.value;
    
    // Redirect logged-in users away from login/register pages (but allow home page)
-   if ((path === '/login' || path === '/register') && token) {
+   if ( isAccessibleByLoggedInUser && token) {
         return NextResponse.redirect(new URL('/profile', request.nextUrl));
    }
 
@@ -26,6 +27,9 @@ export const config = {
     '/register',
     '/pending-verification',
     '/pending-verification/:path*',
+    '/resetpassword',
+    '/resetpassword/:path*',
+    '/forgotpassword',
     '/',
   ],
 }
